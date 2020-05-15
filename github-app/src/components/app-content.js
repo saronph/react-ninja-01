@@ -11,41 +11,44 @@ import Repos from './repos';
  * - Repos é array, lenght pega pelo tamanha, se for vazio nao aparece
  */
 
-function AppContent({ userinfo, repos, starred }) {
-  return (
+function AppContent({ 
+  userinfo, repos, starred, handleSearch, getRepos, getStarred 
+    }) {  
+
+    return (
     <div className='app'>
 
-    <Search />
+      <Search handleSearch={handleSearch} />
 
-    {!!userinfo && 
-    <UserInfo 
-      userinfo={userinfo}
-    />}
+      {!!userinfo && 
+      <UserInfo 
+        userinfo={userinfo}
+      />}
 
-    {!!userinfo && <Actions />}
+      {!!userinfo && <Actions getRepos={getRepos} getStarred={getStarred} />}
 
-    {!!repos.length &&
-      <Repos 
-        className='repos' 
-        title='Repositórios:'
-        repos={repos} 
-      />
-    }
+      {!!repos.length &&
+        <Repos 
+          className='repos' 
+          title='Repositórios:'
+          repos={repos} 
+        />
+      }
 
-    {!!starred.length &&
-      <Repos 
-        className='starred' 
-        title='Favoritos:'
-        repos={starred} 
-      />
-    }
+      {!!starred.length &&
+        <Repos 
+          className='starred' 
+          title='Favoritos:'
+          repos={starred} 
+        />
+      }
 
   </div>
   )
 }
 
 AppContent.propTypes = {
-  userinfo: PropTypes.object.isRequired,
+  userinfo: PropTypes.object,
   repos: PropTypes.array.isRequired,
   starred: PropTypes.array.isRequired
 }
