@@ -7,6 +7,8 @@ import ajax from '@fdaciuk/ajax';
  * - Repos são a mesma estrutura, só mudando os dados
  * - Função getRepos vai receber prop como 'type' pois será feito apenas 1 busca
  * para preencher os dados de repos e starred.
+ * - 'e.target.disabled = true' disabled é prop padrão, mudado o estado no retorno
+ * para false
  */
 
 import AppContent from './components/app-content';
@@ -32,8 +34,10 @@ class App extends Component {
       const value = e.target.value
       const keyCode = e.which || e.keyCode
       const ENTER = 13
+      const target = e.target
       
       if(keyCode === ENTER) {
+        target.disabled = true
         ajax().get(this.getGitHubApiUrl(value))
         .then((result) => {
           this.setState({
@@ -48,6 +52,9 @@ class App extends Component {
             repos: [],
             starred: []
           })
+        })
+        .always(() => {
+          target.disabled = false
         })
       }
     }
