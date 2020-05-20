@@ -9,17 +9,17 @@ import Repos from './repos';
 /**
  * - '!!' transforma para booleano, '0' = false
  * - Repos é array, lenght pega pelo tamanha, se for vazio nao aparece
+ * - 'isFetching' para mostrar carregamento
  */
 
-function AppContent({ 
-  userinfo, repos, starred, handleSearch, getRepos, getStarred 
-    }) {  
+function AppContent({ userinfo, repos, starred, handleSearch, getRepos, 
+  getStarred, isFetching }) {  
 
     return (
     <div className='app'>
 
-      <Search handleSearch={handleSearch} />
-
+      <Search isDisabled={isFetching} handleSearch={handleSearch} />
+      {isFetching && <div>Carregando...</div> }
       {!!userinfo && 
       <UserInfo 
         userinfo={userinfo}
@@ -50,7 +50,11 @@ function AppContent({
 AppContent.propTypes = {
   userinfo: PropTypes.object,
   repos: PropTypes.array.isRequired,
-  starred: PropTypes.array.isRequired
+  starred: PropTypes.array.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  getRepos: PropTypes.func.isRequired,
+  getStarred: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired
 }
 
 export default AppContent;

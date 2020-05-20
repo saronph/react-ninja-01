@@ -9,6 +9,8 @@ import ajax from '@fdaciuk/ajax';
  * para preencher os dados de repos e starred.
  * - 'e.target.disabled = true' disabled é prop padrão, mudado o estado no retorno
  * para false
+ * - '{...this.state }' substitui as 4 linhas comentadas, spread operator, passa
+ * todas as props
  */
 
 import AppContent from './components/app-content';
@@ -19,7 +21,8 @@ class App extends Component {
     this.state = {
       userinfo: null,
       repos: [],
-      starred: []
+      starred: [],
+      isFetching: false,
     }
   }
 
@@ -34,12 +37,13 @@ class App extends Component {
       const value = e.target.value
       const keyCode = e.which || e.keyCode
       const ENTER = 13
-      const target = e.target
       
       if(keyCode === ENTER) {
-        target.disabled = true
+        this.setState({
+          isFetching: true
+        })
         ajax().get(this.getGitHubApiUrl(value))
-        .then((result) => {
+        .then((result) => {          
           this.setState({
             userinfo: {
               username: result.name,
@@ -53,9 +57,7 @@ class App extends Component {
             starred: []
           })
         })
-        .always(() => {
-          target.disabled = false
-        })
+        .always(() => this.setState({ isFetching: false }))
       }
     }
     
@@ -78,12 +80,14 @@ class App extends Component {
   render () {
     return (
       <AppContent 
-        userinfo={this.state.userinfo}
-        repos={this.state.repos}
-        starred={this.state.starred}
+        {...this.state }
+        // userinfo={this.state.userinfo}
+        // repos={this.state.repos}
+        // starred={this.state.starred}
+        // isFetching={this.state.isFetching}
         handleSearch={(e) => this.handleSearch(e)}
         getRepos={this.getRepos('repos')}
-        getStarred={this.getRepos('starred')}
+        getStarred={this.getRepos('starred')}        
       />
     );
   }
